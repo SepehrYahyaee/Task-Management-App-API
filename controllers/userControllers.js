@@ -1,21 +1,26 @@
 const { UserService, ProfileService } = require('../services');
-const { passwordHasher } = require('../providers');
+const { passwordHasher, loginChecker, tokenGenerator } = require('../providers');
+
 const userService = new UserService();
 const profileService = new ProfileService();
 
 async function register(req, res) {
-    const hashedPassword = await passwordHasher(req.body.password);
-    const user = await userService.createUser(req.body.userName, hashedPassword);
+    const user = await userService.createUser(req.body.userName, await passwordHasher(req.body.password));
     await profileService.createProfile(user.id);
     return res.send(`user has been created succesfully: ${user}`);
 }
 
+async function login(req, res) {
+    await loginChecker(req.body.userName, req.body.password);
+    return res.send(tokenGenerator({ userName: req.body.userName }, process.env.SECRET_KEY, process.env.EXPIRE_TIME));
+}
+
 async function myProfile(req, res) {
-    return res.send(await profileService.getProfileById(req.params.id));
+    return res.send(await profileService.getProfileById(req.user.id));
 }
 
 async function updateMyProfile(req, res) {
-    return res.send(await profileService.updateProfile(req.params.id, req.body));
+    return res.send(await profileService.updateProfile(req.user.id, req.body));
 }
 
 async function getUsers(req, res) {
@@ -27,16 +32,17 @@ async function getUserById(req, res) {
 }
 
 async function updateUser(req, res) {
-    return res.send(await userService.updateUser(req.params.id, req.body));
+    return res.send(await userService.updateUser(req.user.id, req.body));
 }
 
 async function deleteUser(req, res) {
-    await profileService.deleteProfile(req.params.id);
-    return res.send(`deleted user is: ${await userService.deleteUser(req.params.id)}`);
+    await profileService.deleteProfile(req.user.id);
+    return res.send(`deleted user is: ${await userService.deleteUser(req.user.id)}`);
 }
 
 module.exports = {
     register,
+    login,
     myProfile,
     updateMyProfile,
     getUsers,

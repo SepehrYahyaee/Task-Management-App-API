@@ -16,6 +16,12 @@ class UserService {
         return this.db.user.findMany({});
     }
 
+    retrieveUserByUserName(userName) {
+        return this.db.user.findUnique({
+            where: { userName }
+        })
+    }
+
     retrieveUserById(id) {
         return this.db.user.findUnique({
             where: { id }
