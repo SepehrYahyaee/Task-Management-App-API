@@ -12,12 +12,6 @@ class UserService {
         });
     }
 
-    getProfileById(id) {
-        return this.db.profile.findUnique({
-            where: { id }
-        })
-    }
-
     retrieveAllUsers() {
         return this.db.user.findMany({});
     }
@@ -28,10 +22,10 @@ class UserService {
         })
     }
 
-    updateUser(id, update) {
+    updateUser(id, updateObject) {
         return this.db.user.update({
             where: { id },
-            data: update
+            data: updateObject
         })
     }
 

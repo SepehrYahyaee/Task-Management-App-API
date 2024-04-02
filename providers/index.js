@@ -1,0 +1,1 @@
+exports.passwordHasher = require('./passwordHasher.js');

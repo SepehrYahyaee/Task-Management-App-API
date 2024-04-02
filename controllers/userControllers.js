@@ -1,12 +1,21 @@
-const { UserService } = require('../services');
+const { UserService, ProfileService } = require('../services');
+const { passwordHasher } = require('../providers');
 const userService = new UserService();
+const profileService = new ProfileService();
 
 async function register(req, res) {
-    return res.send(`user has been created succesfully: ${await userService.createUser(req.body.userName, req.body.password)}`);
+    const hashedPassword = await passwordHasher(req.body.password);
+    const user = await userService.createUser(req.body.userName, hashedPassword);
+    await profileService.createProfile(user.id);
+    return res.send(`user has been created succesfully: ${user}`);
 }
 
 async function myProfile(req, res) {
-    return res.send(await userService.getProfileById(req.params.id));
+    return res.send(await profileService.getProfileById(req.params.id));
+}
+
+async function updateMyProfile(req, res) {
+    return res.send(await profileService.updateProfile(req.params.id, req.body));
 }
 
 async function getUsers(req, res) {
@@ -22,12 +31,14 @@ async function updateUser(req, res) {
 }
 
 async function deleteUser(req, res) {
+    await profileService.deleteProfile(req.params.id);
     return res.send(`deleted user is: ${await userService.deleteUser(req.params.id)}`);
 }
 
 module.exports = {
     register,
     myProfile,
+    updateMyProfile,
     getUsers,
     getUserById,
     updateUser,
