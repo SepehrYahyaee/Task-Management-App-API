@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+enum TaskStatus {
+  Done
+  Pending
+  Failed
+}
+
+model User {
+  id       String   @id @default(uuid())
+  userName String   @unique @db.VarChar(24)
+  password String   @db.VarChar(32)
+  email    String?  @unique
+  profile  Profile?
+  tasks    Task[]
+  tags     Tag[]
+}
+
+model Profile {
+  id          String    @id
+  image       String?
+  dateOfBirth DateTime?
+  firstName   String?   @db.VarChar(32)
+  lastName    String?   @db.VarChar(32)
+  user        User      @relation(fields: [id], references: [id])
+}
+
+model Task {
+  id          String      @id @default(uuid())
+  title       String      @db.VarChar(255)
+  description String?     @db.VarChar(255)
+  dueDate     DateTime?   @db.Timestamp()
+  status      TaskStatus  @default(Pending)
+  byUser      String
+  user        User        @relation(fields: [byUser], references: [id])
+  TaskToTag   TaskToTag[]
+}
+
+model Tag {
+  id        String      @id @default(uuid())
+  name      String      @db.VarChar(24)
+  byUser    String
+  user      User        @relation(fields: [byUser], references: [id])
+  TaskToTag TaskToTag[]
+}
+
+model TaskToTag {
+  taskId String
+  task   Task   @relation(fields: [taskId], references: [id])
+  tagId  String
+  tag    Tag    @relation(fields: [tagId], references: [id])
+  @@id([taskId, tagId])
+}
