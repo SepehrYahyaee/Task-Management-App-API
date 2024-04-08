@@ -14,13 +14,15 @@ enum TaskStatus {
 }
 
 model User {
-  id       String   @id @default(uuid())
-  userName String   @unique @db.VarChar(24)
-  password String
-  email    String?  @unique
-  profile  Profile?
-  tasks    Task[]
-  tags     Tag[]
+  id        String   @id @default(uuid())
+  userName  String   @unique @db.VarChar(24)
+  password  String
+  email     String?  @unique
+  profile   Profile?
+  tasks     Task[]
+  tags      Tag[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Profile {
@@ -30,6 +32,7 @@ model Profile {
   firstName   String?   @db.VarChar(32)
   lastName    String?   @db.VarChar(32)
   user        User      @relation(fields: [id], references: [id])
+  updatedAt   DateTime  @updatedAt
 }
 
 model Task {
@@ -39,22 +42,29 @@ model Task {
   dueDate     DateTime?   @db.Timestamp()
   status      TaskStatus  @default(Pending)
   byUser      String
-  user        User        @relation(fields: [byUser], references: [id])
+  user        User        @relation(fields: [byUser], references: [id], onDelete: Cascade)
   TaskToTag   TaskToTag[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 }
 
 model Tag {
   id        String      @id @default(uuid())
   name      String      @db.VarChar(24)
   byUser    String
-  user      User        @relation(fields: [byUser], references: [id])
+  user      User        @relation(fields: [byUser], references: [id], onDelete: Cascade)
   TaskToTag TaskToTag[]
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
 }
 
 model TaskToTag {
-  taskId String
-  task   Task   @relation(fields: [taskId], references: [id])
-  tagId  String
-  tag    Tag    @relation(fields: [tagId], references: [id])
+  taskId    String
+  task      Task     @relation(fields: [taskId], references: [id])
+  tagId     String
+  tag       Tag      @relation(fields: [tagId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@id([taskId, tagId])
 }
