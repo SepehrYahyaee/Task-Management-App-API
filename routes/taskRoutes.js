@@ -10,4 +10,24 @@ router.route('/createTask')
         taskControllers.createTask,
     )
 
+router.route('/myTasks')
+    .get(
+        auth,
+        taskControllers.getAllMyTasks,
+    )
+
+router.route('/myTasks/:id')
+    .get(
+        auth,
+        taskControllers.getMySpecificTask,
+    )
+    .put(
+        auth,
+        taskControllers.updateTask,
+    )
+    .delete(
+        auth,
+        taskControllers.deleteTask,
+    )
+
 module.exports = router;

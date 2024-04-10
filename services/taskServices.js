@@ -9,9 +9,28 @@ class TaskService {
         });
     }
 
-    retrieveTasks(id) {
+    retrieveAllUserTasks(id) {
         return this.db.task.findMany({
             where: { byUser: id }
+        })
+    }
+
+    retrieveUserSpecificTask(taskId) {
+        return this.db.task.findUnique({
+            where: { id: taskId }
+        })
+    }
+
+    updateSpecificTask(taskId, updateObject) {
+        return this.db.task.update({
+            where: { id: taskId },
+            data: updateObject,
+        })
+    }
+
+    deleteSpecificTask(taskId) {
+        return this.db.task.delete({
+            where: { id: taskId }
         })
     }
 }
