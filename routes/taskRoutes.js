@@ -30,4 +30,10 @@ router.route('/myTasks/:id')
         taskControllers.deleteTask,
     )
 
+router.route('/myTasks/:id/addTag')
+    .post(
+        auth,
+        taskControllers.addTagToTask,
+    )
+
 module.exports = router;

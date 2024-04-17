@@ -33,6 +33,15 @@ class TaskService {
             where: { id: taskId }
         })
     }
+
+    createTagToTask(taskId, tagId) {
+        return this.db.taskToTag.create({
+            data: {
+                taskId,
+                tagId,
+            }
+        })
+    }
 }
 
 module.exports = TaskService;
