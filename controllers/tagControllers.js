@@ -31,5 +31,5 @@ module.exports = {
     getAllMyTags,
     getMySpecificTag,
     updateTag,
-    deleteTag
+    deleteTag,
 }

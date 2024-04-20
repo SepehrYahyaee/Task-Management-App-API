@@ -1,5 +1,5 @@
 const express = require('express');
-const { auth } = require('../middlewares');
+const { auth, validation } = require('../middlewares');
 const { tagControllers } = require('../controllers');
 
 const router = express.Router(); // api/tag
@@ -7,27 +7,31 @@ const router = express.Router(); // api/tag
 router.route('/createTag')
     .post(
         auth,
-        tagControllers.createTag
-    )
+        ...validation.createTagValidators,
+        validation.validationErrorHandler,
+        tagControllers.createTag,
+);
 
 router.route('/myTags')
     .get(
         auth,
-        tagControllers.getAllMyTags
-    )
+        tagControllers.getAllMyTags,
+);
 
 router.route('/myTags/:id')
     .get(
         auth,
-        tagControllers.getMySpecificTag
+        tagControllers.getMySpecificTag,
     )
     .put(
         auth,
-        tagControllers.updateTag
+        ...validation.updateTagValidators,
+        validation.validationErrorHandler,
+        tagControllers.updateTag,
     )
     .delete(
         auth,
-        tagControllers.deleteTag
-    )
+        tagControllers.deleteTag,
+);
 
 module.exports = router;
