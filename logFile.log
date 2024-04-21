@@ -1,0 +1,2 @@
+::1 - - [21/Apr/2024:18:37:30 +0000] "GET / HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+::1 - - [21/Apr/2024:18:37:30 +0000] "GET /favicon.ico HTTP/1.1" 200 15 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
