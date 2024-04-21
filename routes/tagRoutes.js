@@ -9,29 +9,29 @@ router.route('/createTag')
         auth,
         ...validation.createTagValidators,
         validation.validationErrorHandler,
-        tagControllers.createTag,
+        errorHandler.asyncErrorHandler(tagControllers.createTag),
 );
 
 router.route('/myTags')
     .get(
         auth,
-        tagControllers.getAllMyTags,
+        errorHandler.asyncErrorHandler(tagControllers.getAllMyTags),
 );
 
 router.route('/myTags/:id')
     .get(
         auth,
-        tagControllers.getMySpecificTag,
+        errorHandler.asyncErrorHandler(tagControllers.getMySpecificTag),
     )
     .put(
         auth,
         ...validation.updateTagValidators,
         validation.validationErrorHandler,
-        tagControllers.updateTag,
+        errorHandler.asyncErrorHandler(tagControllers.updateTag),
     )
     .delete(
         auth,
-        tagControllers.deleteTag,
+        errorHandler.asyncErrorHandler(tagControllers.deleteTag),
 );
 
 module.exports = router;

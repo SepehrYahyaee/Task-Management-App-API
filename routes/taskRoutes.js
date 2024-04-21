@@ -1,5 +1,5 @@
 const express = require('express');
-const { auth, validation } = require('../middlewares');
+const { auth, validation, errorHandler } = require('../middlewares');
 const { taskControllers } = require('../controllers');
 
 const router = express.Router(); // api/task
@@ -9,29 +9,29 @@ router.route('/createTask')
         auth,
         ...validation.createTaskValidators,
         validation.validationErrorHandler,
-        taskControllers.createTask,
+        errorHandler.asyncErrorHandler(taskControllers.createTask),
 );
 
 router.route('/myTasks')
     .get(
         auth,
-        taskControllers.getAllMyTasks,
+        errorHandler.asyncErrorHandler(taskControllers.getAllMyTasks),
 );
 
 router.route('/myTasks/:id')
     .get(
         auth,
-        taskControllers.getMySpecificTask,
+        errorHandler.asyncErrorHandler(taskControllers.getMySpecificTask),
     )
     .put(
         auth,
         ...validation.updateTaskValidators,
         validation.validationErrorHandler,
-        taskControllers.updateTask,
+        errorHandler.asyncErrorHandler(taskControllers.updateTask),
     )
     .delete(
         auth,
-        taskControllers.deleteTask,
+        errorHandler.asyncErrorHandler(taskControllers.deleteTask),
 );
 
 router.route('/myTasks/:id/addTag')
@@ -39,7 +39,7 @@ router.route('/myTasks/:id/addTag')
         auth,
         ...validation.addTagToTaskValidators,
         validation.validationErrorHandler,
-        taskControllers.addTagToTask,
+        errorHandler.asyncErrorHandler(taskControllers.addTagToTask),
 );
 
 module.exports = router;

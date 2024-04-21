@@ -1,6 +1,6 @@
 const express = require('express');
 const { userControllers } = require('../controllers');
-const { auth, validation } = require('../middlewares');
+const { auth, validation, errorHandler } = require('../middlewares');
 
 const router = express.Router(); // api/user
 
@@ -8,44 +8,44 @@ router.route('/register')
     .post(
         ...validation.registerValidators,
         validation.validationErrorHandler,
-        userControllers.register,
+        errorHandler.asyncErrorHandler(userControllers.register),
 );
 
 router.route('/login')
     .post(
         ...validation.loginValidators,
         validation.validationErrorHandler,
-        userControllers.login,
+        errorHandler.asyncErrorHandler(userControllers.login),
 );
 
 router.route('/myProfile')
     .get(
         auth,
-        userControllers.myProfile,
+        errorHandler.asyncErrorHandler(userControllers.myProfile),
     )
     .put(
         auth,
         ...validation.updateProfileValidators,
         validation.validationErrorHandler,
-        userControllers.updateMyProfile,
+        errorHandler.asyncErrorHandler(userControllers.updateMyProfile),
     ).patch(
         auth,
         ...validation.updateUserValidators,
         validation.validationErrorHandler,
-        userControllers.updateUser,
+        errorHandler.asyncErrorHandler(userControllers.updateUser),
     ).delete(
         auth,
-        userControllers.deleteUser,
+        errorHandler.asyncErrorHandler(userControllers.deleteUser),
 );
 
 router.route('/')
     .get(
-        userControllers.getUsers,
+        errorHandler.asyncErrorHandler(userControllers.getUsers),
 );
 
 router.route('/:id')
     .get(
-        userControllers.getUserById,
+        errorHandler.asyncErrorHandler(userControllers.getUserById),
 );
 
 module.exports = router;
