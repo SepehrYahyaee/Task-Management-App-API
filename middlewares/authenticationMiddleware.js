@@ -1,19 +1,19 @@
 const { tokenVerifier } = require('../providers');
 const { UserService } = require('../services');
-const { customErrorClass } = require('../providers');
+const CustomError = require('../public/customErrorClass.js');
 
 const userService = new UserService();
 
 async function authentication(req, res, next) {
     try {
-        if (!req.headers.authorization) throw new customErrorClass('token is needed in header for authentication!', 400);
+        if (!req.headers.authorization) throw new CustomError('token is needed in header for authentication!', 400);
         const payload = tokenVerifier(req.headers.authorization.split(' ')[1], process.env.SECRET_KEY);  
         if (payload) {
             req.user = await userService.retrieveUserByUserName(payload.userName);
             next()
         }      
     } catch (error) {
-        throw new customErrorClass('something went wrong in authentication middleware!', 403);
+        next(new CustomError('something went wrong in authentication middleware!', 403));
     }
 }
 

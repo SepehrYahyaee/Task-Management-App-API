@@ -12,18 +12,18 @@ async function getAllMyTags(req, res) {
 }
 
 async function getMySpecificTag(req, res) {
-    if (await tagOwnerChecker(req.params.id, req.user.id)) return res.send(await tagService.retrieveUserSpecificTag(req.params.id));
-    else return res.status(200).send('UnAuthorized! you are not the owner of this tag!');
+    if (await tagOwnerChecker(req.params.id, req.user.id)) return res.status(200).send(await tagService.retrieveUserSpecificTag(req.params.id));
+    else return res.status(401).send('UnAuthorized! you are not the owner of this tag!');
 }
 
 async function updateTag(req, res) {
-    if (await tagOwnerChecker(req.params.id, req.user.id)) return res.send(await tagService.updateTag(req.params.id, req.body.name));
-    else return res.status(201).send('UnAuthorized! you are not the owner of this tag!');
+    if (await tagOwnerChecker(req.params.id, req.user.id)) return res.status(201).send(await tagService.updateTag(req.params.id, req.body.name));
+    else return res.status(401).send('UnAuthorized! you are not the owner of this tag!');
 }
 
 async function deleteTag(req, res) {
-    if (await tagOwnerChecker(req.params.id, req.user.id)) return res.send(await tagService.deleteTag(req.params.id));
-    else return res.status(204).send('UnAuthorized! you are not the owner of this tag!');
+    if (await tagOwnerChecker(req.params.id, req.user.id)) return res.status(204).send(await tagService.deleteTag(req.params.id));
+    else return res.status(401).send('UnAuthorized! you are not the owner of this tag!');
 }
 
 module.exports = {

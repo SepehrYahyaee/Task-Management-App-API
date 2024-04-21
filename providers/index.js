@@ -4,4 +4,3 @@ exports.tokenVerifier = require('./tokenVerifier.js');
 exports.loginChecker = require('./loginChecker.js');
 exports.ownerChecker = require('./taskOwnerChecker.js');
 exports.tagOwnerChecker = require('./tagOwnerChecker.js');
-exports.customErrorClass = require('./customErrorClass.js');

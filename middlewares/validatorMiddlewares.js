@@ -1,11 +1,12 @@
 const { body, param, query, validationResult, checkExact } = require('express-validator');
+const CustomError = require('../public/customErrorClass.js');
 
 function validationErrorHandler(req, res, next){
     try {
         const isValid = validationResult(req);
         if (!isValid.isEmpty()){
             const message = isValid.errors[0].msg;
-            throw new Error(message);
+            throw new CustomError(message, 450);
         } else {
             next();
         }
@@ -22,7 +23,7 @@ const registerValidators = [
 
 const loginValidators = [
     body('userName').isString().trim().escape().notEmpty().withMessage('username validation failed!'),
-    body('password').isString().trim().escape().notEmpty().isStrongPassword().withMessage('password validation failed'),
+    body('password').isString().trim().escape().notEmpty().withMessage('password validation failed'),
     checkExact(),
 ];
 
@@ -43,14 +44,14 @@ const updateUserValidators = [
 const createTaskValidators = [
     body('title').isString().trim().escape().withMessage('title validation failed!'),
     body('description').optional().isString().trim().escape().withMessage('description validation failed!'),
-    body('dueDate').optional().isDate().trim().escape().withMessage('Due Date validation failed!'),
+    body('dueDate').optional().isString().trim().escape().withMessage('Due Date validation failed!'),
     checkExact(),
 ];
 
 const updateTaskValidators = [
     body('title').optional().isString().trim().escape().withMessage('title validation failed!'),
     body('description').optional().isString().trim().escape().withMessage('description validation failed!'),
-    body('dueDate').optional().isDate().trim().escape().withMessage('Due Date validation failed!'),
+    body('dueDate').optional().isString().trim().escape().withMessage('Due Date validation failed!'),
     body('status').optional().isString().trim().escape().isIn(['Done', 'Pending', 'Failed']).withMessage('status validation failed!'),
     checkExact(),
 ];

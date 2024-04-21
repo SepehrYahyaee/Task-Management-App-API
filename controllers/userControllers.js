@@ -7,7 +7,7 @@ const profileService = new ProfileService();
 async function register(req, res) {
     const user = await userService.createUser(req.body.userName, await passwordHasher(req.body.password));
     await profileService.createProfile(user.id);
-    return res.status(201).send(`user has been created succesfully: ${user}`);
+    return res.status(201).send(`user has been created succesfully: ${JSON.stringify(user)}`);
 }
 
 async function login(req, res) {

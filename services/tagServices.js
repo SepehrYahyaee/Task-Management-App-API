@@ -46,6 +46,17 @@ class TagService {
             }
         })
     }
+
+    getTagsOnTask(taskId) {
+        return this.db.taskToTag.findMany({
+            where: {
+                taskId,
+            },
+            select: {
+                tagId: true,
+            }
+        })
+    }
 }
 
 module.exports = TagService;

@@ -1,5 +1,7 @@
-const { customErrorClass } = require('../providers');
+const CustomError = require('../public/customErrorClass.js');
 const { PrismaClientKnownRequestError } = require('@prisma/client');
+
+require('dotenv').config();
 
 const prismaErrorMapping = new Map()
     .set('P1000', 'DB Authentication Failed, username or password for DB is wrong!')
@@ -59,13 +61,13 @@ const prismaErrorMapping = new Map()
     .set('P5011', 'Request parameters are invalid.')
 
 function globalErrorHandler(error, req, res, next){
-    if (error instanceof customErrorClass){
+    if (error instanceof CustomError){
         error.statusCode = error.statusCode || 500;
         error.status = error.status || 'error';
         res.status(error.statusCode).send({
             status: error.statusCode,
             message: error.message,
-            stack: error.stack.split('\n')[1]
+            stack: (process.env.ENVIRONMENT === 'production') ? null : error.stack.split('\n')[1],
         })
     } else if (error instanceof PrismaClientKnownRequestError){
         const errorMessage = {
@@ -75,7 +77,8 @@ function globalErrorHandler(error, req, res, next){
         }
         res.status(500).send(errorMessage);
     } else {
-        res.status(500).send({msg: error.message, stack: error.stack});
+        let stackMessage = (process.env.ENVIRONMENT === 'production') ? null : error.stack.split('\n')[1];
+        res.status(500).send({msg: error.message, stack: stackMessage});
     }
 }
 

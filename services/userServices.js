@@ -13,7 +13,11 @@ class UserService {
     }
 
     retrieveAllUsers() {
-        return this.db.user.findMany({});
+        return this.db.user.findMany({
+            select: {
+                userName: true,
+            }
+        });
     }
 
     retrieveUserByUserName(userName) {
